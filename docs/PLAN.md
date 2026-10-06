@@ -7,21 +7,21 @@
 **Success Criteria:** `docs/PLAN.md` contains detailed checklists and testing criteria, `frontend/AGENTS.md` exists and accurately describes the frontend, and the user approves the plan.
 
 ## Part 2: Scaffolding
-- [ ] Create a `backend/` directory and initialize a FastAPI application.
-- [ ] Create `Dockerfile` and `docker-compose.yml` (if needed) for the full stack.
-- [ ] Configure `uv` as the package manager in the Docker container for Python.
-- [ ] Write `scripts/start.sh`, `scripts/stop.sh` (and `.bat` equivalents for Windows if requested) to manage the container.
-- [ ] Setup FastAPI to serve a basic "Hello World" static HTML at `/` and a `/api/health` endpoint.
-- [ ] **Tests:**
+- [x] Create a `backend/` directory and initialize a FastAPI application.
+- [x] Create `Dockerfile` and `docker-compose.yml` (if needed) for the full stack.
+- [x] Configure `uv` as the package manager in the Docker container for Python.
+- [x] Write `scripts/start.sh`, `scripts/stop.sh` (and `.bat` equivalents for Windows if requested) to manage the container.
+- [x] Setup FastAPI to serve a basic "Hello World" static HTML at `/` and a `/api/health` endpoint.
+- [x] **Tests:**
   - Automated: `pytest` verifying the `/api/health` endpoint.
   - Manual: Run the start script, verify `http://localhost:8000` shows "Hello World", and `/api/health` returns OK.
 **Success Criteria:** Docker environment runs successfully, Python dependencies are managed with `uv`, and start/stop scripts work flawlessly.
 
 ## Part 3: Add in Frontend
-- [ ] Update the `Next.js` configuration in `frontend/` to support static export (`output: 'export'`).
-- [ ] Adjust the Dockerfile to build the Next.js static site and copy it into the FastAPI static files directory.
-- [ ] Update FastAPI to serve the Next.js static files at `/`.
-- [ ] **Tests:**
+- [x] Update the `Next.js` configuration in `frontend/` to support static export (`output: 'export'`).
+- [x] Adjust the Dockerfile to build the Next.js static site and copy it into the FastAPI static files directory.
+- [x] Update FastAPI to serve the Next.js static files at `/`.
+- [x] **Tests:**
   - Automated: Ensure Vitest unit tests in `frontend/` pass.
   - Manual: Build and start the Docker container. Open `http://localhost:8000` and verify the Kanban board MVP UI is displayed.
 **Success Criteria:** The Kanban UI is served perfectly from the FastAPI backend without needing a separate Next.js dev server.

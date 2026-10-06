@@ -9,7 +9,3 @@ def test_health_check():
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
 
-def test_read_root():
-    response = client.get("/")
-    assert response.status_code == 200
-    assert "Hello World from FastAPI!" in response.text
