@@ -38,18 +38,18 @@
 **Success Criteria:** Users cannot see the board without signing in with "user" / "password".
 
 ## Part 5: Database modeling
-- [ ] Propose an SQLite schema design to store the Kanban board as JSON (to match the MVP limitations). The schema should accommodate multiple users (for future scaling) and 1 Kanban board per user.
-- [ ] Document the proposed schema in `docs/DB_SCHEMA.md`.
-- [ ] Get user sign off on the database approach.
-- [ ] **Tests:**
+- [x] Propose an SQLite schema design to store the Kanban board as JSON (to match the MVP limitations). The schema should accommodate multiple users (for future scaling) and 1 Kanban board per user.
+- [x] Document the proposed schema in `docs/DB_SCHEMA.md`.
+- [x] Get user sign off on the database approach.
+- [x] **Tests:**
   - Manual: User reviews and approves `DB_SCHEMA.md`.
 **Success Criteria:** A solid, documented plan for the SQLite schema that fulfills MVP needs.
 
 ## Part 6: Backend DB and API
-- [ ] Set up SQLite integration in FastAPI. The DB file should be created automatically if it doesn't exist.
-- [ ] Create CRUD endpoints: `GET /api/board`, `POST /api/board` (or PUT for updates).
-- [ ] Link these routes to the logged-in user.
-- [ ] **Tests:**
+- [x] Set up SQLite integration in FastAPI. The DB file should be created automatically if it doesn't exist.
+- [x] Create CRUD endpoints: `GET /api/board`, `POST /api/board` (or PUT for updates).
+- [x] Link these routes to the logged-in user.
+- [x] **Tests:**
   - Automated: `pytest` to test DB creation, inserting board data, and retrieving board data for a mock user.
   - Manual: Use cURL or Swagger UI (`/docs`) to test fetching and updating board data.
 **Success Criteria:** The backend can successfully persist and retrieve JSON board data to/from SQLite.

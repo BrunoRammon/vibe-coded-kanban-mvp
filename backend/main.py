@@ -36,6 +36,40 @@ def get_me(session: Optional[str] = Cookie(None)):
 def health_check():
     return {"status": "ok"}
 
+from backend.database import init_db, get_user_id_by_username, get_board_for_user, update_board_for_user
+
+@app.on_event("startup")
+def on_startup():
+    init_db()
+
+@app.get("/api/board")
+def get_board(session: Optional[str] = Cookie(None)):
+    if session != "fake-session-token":
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    # We only have "user" for MVP
+    user_id = get_user_id_by_username("user")
+    if not user_id:
+        raise HTTPException(status_code=404, detail="User not found")
+        
+    board = get_board_for_user(user_id)
+    if not board:
+        raise HTTPException(status_code=404, detail="Board not found")
+        
+    return board
+
+@app.put("/api/board")
+def update_board(board_data: list[dict], session: Optional[str] = Cookie(None)):
+    if session != "fake-session-token":
+        raise HTTPException(status_code=401, detail="Not authenticated")
+        
+    user_id = get_user_id_by_username("user")
+    if not user_id:
+        raise HTTPException(status_code=404, detail="User not found")
+        
+    update_board_for_user(user_id, board_data)
+    return {"message": "Board updated successfully"}
+
 # API routes should be defined above this point.
 
 from fastapi.responses import FileResponse
