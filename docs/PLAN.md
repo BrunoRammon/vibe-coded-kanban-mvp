@@ -27,12 +27,12 @@
 **Success Criteria:** The Kanban UI is served perfectly from the FastAPI backend without needing a separate Next.js dev server.
 
 ## Part 4: Add in a fake user sign in experience
-- [ ] Create a simple login page UI component in Next.js.
-- [ ] Implement a session/cookie-based dummy authentication mechanism on the frontend/backend.
-- [ ] Protect the Kanban board route so it redirects to `/login` if not authenticated.
-- [ ] Hardcode the allowed credentials to "user" and "password".
-- [ ] Implement a logout functionality.
-- [ ] **Tests:**
+- [x] Create a simple login page UI component in Next.js.
+- [x] Implement a session/cookie-based dummy authentication mechanism on the frontend/backend.
+- [x] Protect the Kanban board route so it redirects to `/login` if not authenticated.
+- [x] Hardcode the allowed credentials to "user" and "password".
+- [x] Implement a logout functionality.
+- [x] **Tests:**
   - Automated: Playwright E2E tests verifying login failure, login success, and logout.
   - Manual: Open app -> see login -> enter bad creds (fail) -> enter user/password (success) -> see board -> click logout -> return to login.
 **Success Criteria:** Users cannot see the board without signing in with "user" / "password".
