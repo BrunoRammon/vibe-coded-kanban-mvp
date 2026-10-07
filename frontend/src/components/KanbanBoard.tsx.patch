@@ -1,0 +1,33 @@
+--- frontend/src/components/KanbanBoard.tsx
++++ frontend/src/components/KanbanBoard.tsx
+@@ -51,6 +51,20 @@
+     setActiveCardId(event.active.id as string);
+   };
+ 
++  const handleDragOver = (event: DragOverEvent) => {
++    const { active, over } = event;
++    if (!over || active.id === over.id || !board) return;
++
++    const activeColumnId = findColumnId(board.columns, active.id as string);
++    const overColumnId = findColumnId(board.columns, over.id as string);
++
++    if (activeColumnId && overColumnId && activeColumnId !== overColumnId) {
++      setBoard({
++        ...board,
++        columns: moveCard(board.columns, active.id as string, over.id as string),
++      });
++    }
++  };
++
+   const handleDragEnd = (event: DragEndEvent) => {
+     const { active, over } = event;
+     setActiveCardId(null);
+@@ -166,6 +180,7 @@
+         <DndContext
+           sensors={sensors}
+           collisionDetection={closestCorners}
+           onDragStart={handleDragStart}
++          onDragOver={handleDragOver}
+           onDragEnd={handleDragEnd}
+         >
+           <section className="grid gap-6 lg:grid-cols-5">

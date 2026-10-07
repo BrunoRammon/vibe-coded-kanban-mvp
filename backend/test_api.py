@@ -39,8 +39,9 @@ def test_get_board_authenticated():
     response = client.get("/api/board")
     assert response.status_code == 200
     data = response.json()
-    assert len(data) == 3
-    assert data[0]["id"] == "todo"
+    assert "columns" in data
+    assert "cards" in data
+    assert data["columns"][0]["id"] == "col-backlog"
 
 def test_update_board():
     client.cookies.set("session", "fake-session-token")
@@ -50,7 +51,7 @@ def test_update_board():
     board = res1.json()
     
     # Modify the title of the first column
-    board[0]["title"] = "Modified To Do"
+    board["columns"][0]["title"] = "Modified To Do"
     
     # Update the board
     res2 = client.put("/api/board", json=board)
@@ -60,5 +61,5 @@ def test_update_board():
     # Fetch again to verify persistence
     res3 = client.get("/api/board")
     updated_board = res3.json()
-    assert updated_board[0]["title"] == "Modified To Do"
+    assert updated_board["columns"][0]["title"] == "Modified To Do"
 

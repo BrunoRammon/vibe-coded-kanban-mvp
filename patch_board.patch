@@ -1,0 +1,10 @@
+--- frontend/src/components/KanbanBoard.tsx
++++ frontend/src/components/KanbanBoard.tsx
+@@ -69,6 +69,7 @@
+   const handleDragEnd = (event: DragEndEvent) => {
+     const { active, over } = event;
+     setActiveCardId(null);
++    console.log("handleDragEnd:", { activeId: active?.id, overId: over?.id });
+ 
+     if (!over || active.id === over.id || !board) {
+       return;

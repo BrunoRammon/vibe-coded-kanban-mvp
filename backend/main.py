@@ -43,7 +43,9 @@ def on_startup():
     init_db()
 
 @app.get("/api/board")
-def get_board(session: Optional[str] = Cookie(None)):
+def get_board(response: Response, session: Optional[str] = Cookie(None)):
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
+    
     if session != "fake-session-token":
         raise HTTPException(status_code=401, detail="Not authenticated")
     
@@ -59,7 +61,7 @@ def get_board(session: Optional[str] = Cookie(None)):
     return board
 
 @app.put("/api/board")
-def update_board(board_data: list[dict], session: Optional[str] = Cookie(None)):
+def update_board(board_data: dict, session: Optional[str] = Cookie(None)):
     if session != "fake-session-token":
         raise HTTPException(status_code=401, detail="Not authenticated")
         

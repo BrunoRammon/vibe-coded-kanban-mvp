@@ -55,10 +55,10 @@
 **Success Criteria:** The backend can successfully persist and retrieve JSON board data to/from SQLite.
 
 ## Part 7: Frontend + Backend Integration
-- [ ] Replace `initialData` in the frontend with a fetch call to `GET /api/board` on load.
-- [ ] Modify the drag-and-drop, add, edit, and delete handlers to persist changes via API calls (`POST / PUT /api/board`).
-- [ ] Implement loading states and simple error handling for network failures.
-- [ ] **Tests:**
+- [x] Replace `initialData` in the frontend with a fetch call to `GET /api/board` on load.
+- [x] Modify the drag-and-drop, add, edit, and delete handlers to persist changes via API calls (`POST / PUT /api/board`).
+- [x] Implement loading states and simple error handling for network failures.
+- [x] **Tests:**
   - Automated: Playwright E2E test dragging a card and verifying persistence.
   - Manual: Log in, move a card, rename a column, refresh the page. Ensure changes persisted.
 **Success Criteria:** The Kanban board is fully persistent and functional, seamlessly communicating with the FastAPI backend.
