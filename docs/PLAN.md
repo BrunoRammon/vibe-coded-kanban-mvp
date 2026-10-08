@@ -64,28 +64,28 @@
 **Success Criteria:** The Kanban board is fully persistent and functional, seamlessly communicating with the FastAPI backend.
 
 ## Part 8: AI connectivity
-- [ ] Add OpenRouter API key management via `.env`.
-- [ ] Create an endpoint `/api/ai/test` that makes a simple "2+2" prompt to OpenRouter (`openai/gpt-oss-120b`).
-- [ ] **Tests:**
+- [x] Add OpenRouter API key management via `.env`.
+- [x] Create an endpoint `/api/ai/test` that makes a simple "2+2" prompt to OpenRouter (`openai/gpt-oss-120b`).
+- [x] **Tests:**
   - Automated: Backend mock test for OpenRouter client.
   - Manual: Call `/api/ai/test` and verify a sensible response comes back.
 **Success Criteria:** FastAPI backend successfully authenticates and communicates with the OpenRouter API.
 
 ## Part 9: AI Kanban Logic
-- [ ] Create a new endpoint `/api/ai/chat` that takes the user's message.
-- [ ] In the endpoint, gather the user's current Kanban board JSON state from the DB and append it to the context.
-- [ ] Instruct the AI to use Structured Outputs to return a response message and optionally a new board state.
-- [ ] If the AI returns a new board state, update the DB.
-- [ ] **Tests:**
+- [x] Create a new endpoint `/api/ai/chat` that takes the user's message.
+- [x] In the endpoint, gather the user's current Kanban board JSON state from the DB and append it to the context.
+- [x] Instruct the AI to use Structured Outputs to return a response message and optionally a new board state.
+- [x] If the AI returns a new board state, update the DB.
+- [x] **Tests:**
   - Automated: `pytest` testing the `/api/ai/chat` endpoint with mocked AI responses to ensure DB is updated when requested.
   - Manual: Send a prompt like "Add a card for 'Write Docs' to the Backlog" via Swagger UI and verify the DB updates.
 **Success Criteria:** The backend handles the heavy lifting of prompting the AI with context, interpreting Structured Outputs, and updating the database.
 
 ## Part 10: AI Sidebar Widget UI
-- [ ] Design and implement a chat sidebar component in Next.js.
-- [ ] Connect the sidebar to the `/api/ai/chat` endpoint.
-- [ ] Implement a mechanism for the UI to automatically refresh the board state if the AI made changes to it (e.g., polling, or simply returning the updated board in the chat response and updating React state).
-- [ ] **Tests:**
+- [x] Design and implement a chat sidebar component in Next.js.
+- [x] Connect the sidebar to the `/api/ai/chat` endpoint.
+- [x] Implement a mechanism for the UI to automatically refresh the board state if the AI made changes to it (e.g., polling, or simply returning the updated board in the chat response and updating React state).
+- [x] **Tests:**
   - Automated: Playwright E2E test chatting with a mocked AI response and verifying the board updates.
   - Manual: Open the app, chat with the AI ("Move 'Task A' to Done"), see the AI reply, and visually confirm the card moved on the board.
 **Success Criteria:** A beautiful, intuitive chat interface that empowers the user to manage their Kanban board via natural language.

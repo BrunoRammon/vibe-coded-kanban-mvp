@@ -14,6 +14,7 @@ import {
 } from "@dnd-kit/core";
 import { KanbanColumn } from "@/components/KanbanColumn";
 import { KanbanCardPreview } from "@/components/KanbanCardPreview";
+import { AiSidebar } from "@/components/AiSidebar";
 import { createId, moveCard, findColumnId, type BoardData } from "@/lib/kanban";
 
 export const KanbanBoard = () => {
@@ -194,6 +195,7 @@ export const KanbanBoard = () => {
           </DragOverlay>
         </DndContext>
       </main>
+      <AiSidebar onBoardUpdated={setBoard} />
     </div>
   );
 };

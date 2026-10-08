@@ -1,4 +1,6 @@
 import os
+from dotenv import load_dotenv
+load_dotenv()
 from fastapi import FastAPI, HTTPException, Response, Cookie, Depends
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -73,6 +75,105 @@ def update_board(board_data: dict, session: Optional[str] = Cookie(None)):
     return {"message": "Board updated successfully"}
 
 # API routes should be defined above this point.
+
+from openai import OpenAI
+import os
+
+@app.get("/api/ai/test")
+def ai_test(session: Optional[str] = Cookie(None)):
+    if session != "fake-session-token":
+        raise HTTPException(status_code=401, detail="Not authenticated")
+        
+    api_key = os.environ.get("OPENROUTER_API_KEY")
+    if not api_key:
+        raise HTTPException(status_code=500, detail="OPENROUTER_API_KEY not set")
+        
+    client = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=api_key,
+    )
+    
+    try:
+        response = client.chat.completions.create(
+            model="openai/gpt-oss-120b",
+            messages=[
+                {"role": "user", "content": "What is 2+2? Answer simply."}
+            ]
+        )
+        return {"response": response.choices[0].message.content}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+class ChatRequest(BaseModel):
+    message: str
+
+@app.post("/api/ai/chat")
+def ai_chat(req: ChatRequest, session: Optional[str] = Cookie(None)):
+    if session != "fake-session-token":
+        raise HTTPException(status_code=401, detail="Not authenticated")
+        
+    user_id = get_user_id_by_username("user")
+    if not user_id:
+        raise HTTPException(status_code=404, detail="User not found")
+        
+    board = get_board_for_user(user_id)
+    if not board:
+        raise HTTPException(status_code=404, detail="Board not found")
+        
+    api_key = os.environ.get("OPENROUTER_API_KEY")
+    if not api_key:
+        raise HTTPException(status_code=500, detail="OPENROUTER_API_KEY not set")
+        
+    client = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=api_key,
+    )
+    
+    import json
+    
+    system_prompt = f"""You are an AI assistant helping a user manage their Kanban board.
+The current board state is:
+{json.dumps(board)}
+
+You must respond in JSON format with exactly two keys:
+1. "response_message": A string containing a helpful message to the user about what you did or answering their question.
+2. "updated_board": If you need to make changes to the board, provide the entirely new board JSON object here. If no changes are needed, this should be null.
+
+Do NOT wrap the JSON in Markdown backticks (e.g., no ```json). Just output raw JSON.
+"""
+
+    try:
+        response = client.chat.completions.create(
+            model="openai/gpt-oss-120b",
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": req.message}
+            ],
+            response_format={"type": "json_object"}
+        )
+        
+        content = response.choices[0].message.content
+        try:
+            parsed = json.loads(content)
+        except json.JSONDecodeError:
+            # Fallback if the model still wrapped in markdown
+            if content.startswith("```json"):
+                content = content[7:-3].strip()
+                parsed = json.loads(content)
+            else:
+                raise ValueError("Could not parse JSON from AI response")
+                
+        # If the AI provided an updated board, save it
+        if parsed.get("updated_board"):
+            update_board_for_user(user_id, parsed["updated_board"])
+            
+        return {
+            "response_message": parsed.get("response_message", "I have updated the board."),
+            "updated_board": parsed.get("updated_board")
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 from fastapi.responses import FileResponse
 import os
