@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { initialData } from "../src/lib/kanban";
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/login");
@@ -6,6 +7,7 @@ test.beforeEach(async ({ page }) => {
   await page.fill('input[placeholder="password"]', "password");
   await page.click('button:has-text("Sign In")');
   await page.waitForURL("**/");
+  await page.request.put("/api/board", { data: initialData });
 });
 
 test("loads the kanban board", async ({ page }) => {
@@ -47,3 +49,35 @@ test("moves a card between columns", async ({ page }) => {
   await page.mouse.up();
   await expect(targetColumn.getByTestId("card-card-1")).toBeVisible();
 });
+
+test("updates the board via AI chat sidebar", async ({ page }) => {
+  const updatedBoard = structuredClone(initialData);
+  updatedBoard.cards["card-ai"] = {
+    id: "card-ai",
+    title: "AI Created Task",
+    details: "Created by AI assistant",
+  };
+  updatedBoard.columns[0].cardIds.push("card-ai");
+
+  await page.route("**/api/ai/chat", async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({
+        response_message: "I added 'AI Created Task' to Backlog.",
+        updated_board: updatedBoard,
+      }),
+    });
+  });
+
+  await page.goto("/");
+  await page.locator("button.fixed.bottom-6.right-6").click();
+  await expect(page.getByRole("heading", { name: "AI Assistant" })).toBeVisible();
+
+  await page.getByPlaceholder("Ask me to move a card...").fill("Add AI Created Task");
+  await page.locator('form button[type="submit"]').click();
+
+  await expect(page.getByText("I added 'AI Created Task' to Backlog.")).toBeVisible();
+  await expect(page.getByTestId("column-col-backlog").getByText("AI Created Task")).toBeVisible();
+});
+

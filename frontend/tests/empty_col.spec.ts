@@ -1,4 +1,25 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
+import { initialData } from "../src/lib/kanban";
+
+async function dragCardToColumn(page: Page, card: Locator, targetColumn: Locator) {
+  const cardBox = await card.boundingBox();
+  const columnBox = await targetColumn.boundingBox();
+  if (!cardBox || !columnBox) {
+    throw new Error("Unable to resolve drag coordinates.");
+  }
+
+  await page.mouse.move(
+    cardBox.x + cardBox.width / 2,
+    cardBox.y + cardBox.height / 2
+  );
+  await page.mouse.down();
+  await page.mouse.move(
+    columnBox.x + columnBox.width / 2,
+    columnBox.y + 120,
+    { steps: 12 }
+  );
+  await page.mouse.up();
+}
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/login");
@@ -6,27 +27,23 @@ test.beforeEach(async ({ page }) => {
   await page.fill('input[placeholder="password"]', "password");
   await page.click('button:has-text("Sign In")');
   await page.waitForURL("**/");
+  await page.request.put("/api/board", { data: initialData });
 });
 
 test("moves a card to an empty column", async ({ page }) => {
   await page.goto("/");
-  
-  // First, empty out col-discovery by deleting any cards it might have
-  // (In our default data, Discovery has "card-3")
+
   const discoveryCol = page.getByTestId("column-col-discovery");
-  
-  // For the sake of the test, let's just move card-3 to Review to make Discovery empty
   const card3 = page.getByTestId("card-card-3");
   const reviewCol = page.getByTestId("column-col-review");
-  await card3.dragTo(reviewCol);
-  
-  // Verify Discovery is empty
+
+  await dragCardToColumn(page, card3, reviewCol);
+
   await expect(discoveryCol.locator('[data-testid^="card-"]')).toHaveCount(0);
-  
-  // Now drag card-1 to Discovery
+
   const card1 = page.getByTestId("card-card-1");
-  await card1.dragTo(discoveryCol);
-  
-  // Verify card-1 is in Discovery
+  await dragCardToColumn(page, card1, discoveryCol);
+
   await expect(discoveryCol.getByTestId("card-card-1")).toBeVisible();
 });
+
