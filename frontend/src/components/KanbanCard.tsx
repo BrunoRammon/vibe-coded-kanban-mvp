@@ -82,16 +82,14 @@ export const KanbanCard = ({ card, onEdit, onDelete }: KanbanCardProps) => {
           </div>
         </form>
       ) : (
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <h4 className="font-display text-base font-semibold text-[var(--navy-dark)]">
-              {card.title}
-            </h4>
-            <p className="mt-2 text-sm leading-6 text-[var(--gray-text)]">
-              {card.details}
-            </p>
-          </div>
-          <div className="flex items-center gap-1">
+        <div className="flex flex-col">
+          <h4 className="break-words font-display text-base font-semibold text-[var(--navy-dark)]">
+            {card.title}
+          </h4>
+          <p className="mt-2 break-words text-sm leading-6 text-[var(--gray-text)]">
+            {card.details}
+          </p>
+          <div className="mt-3 flex items-center justify-end gap-2 border-t border-[var(--stroke)] pt-2.5">
             <button
               type="button"
               onClick={() => {
@@ -99,7 +97,7 @@ export const KanbanCard = ({ card, onEdit, onDelete }: KanbanCardProps) => {
                 setDetails(card.details);
                 setIsEditing(true);
               }}
-              className="rounded-full border border-transparent px-2 py-1 text-xs font-semibold text-[var(--gray-text)] transition hover:border-[var(--stroke)] hover:text-[var(--navy-dark)]"
+              className="rounded-full border border-[var(--stroke)] px-2.5 py-1 text-xs font-semibold text-[var(--gray-text)] transition hover:border-[var(--primary-blue)] hover:text-[var(--navy-dark)]"
               aria-label={`Edit ${card.title}`}
             >
               Edit
@@ -107,7 +105,7 @@ export const KanbanCard = ({ card, onEdit, onDelete }: KanbanCardProps) => {
             <button
               type="button"
               onClick={() => onDelete(card.id)}
-              className="rounded-full border border-transparent px-2 py-1 text-xs font-semibold text-[var(--gray-text)] transition hover:border-[var(--stroke)] hover:text-[var(--navy-dark)]"
+              className="rounded-full border border-[var(--stroke)] px-2.5 py-1 text-xs font-semibold text-[var(--gray-text)] transition hover:border-red-200 hover:text-red-600"
               aria-label={`Delete ${card.title}`}
             >
               Remove
