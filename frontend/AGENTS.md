@@ -11,19 +11,16 @@ This document describes the existing frontend code for the Kanban Board MVP to h
 
 ## Structure
 
-- `src/app/page.tsx`: The main entry point, rendering the `<KanbanBoard />` component.
-- `src/components/KanbanBoard.tsx`: The main orchestrator for the board. It holds the board state using React `useState` and handles drag-and-drop events via `DndContext`.
-- `src/components/KanbanColumn.tsx`: Renders a single column using `useDroppable` and `SortableContext`. Includes inline editing for the column title.
-- `src/components/KanbanCard.tsx`: Renders an individual card using `useSortable`. Handles displaying the card title, details, and delete actions.
+- `src/app/page.tsx`: The main authenticated entry point. Verifies the user session via `GET /api/me`, redirects unauthenticated users to `/login`, provides a logout button (`POST /api/logout`), and renders `<KanbanBoard />`.
+- `src/app/login/page.tsx`: Login page UI that authenticates via `POST /api/login`.
+- `src/components/KanbanBoard.tsx`: The main orchestrator for the board. Fetches initial state from `GET /api/board`, syncs mutations via `PUT /api/board`, handles drag-and-drop events via `DndContext`, and renders `<AiSidebar />`.
+- `src/components/KanbanColumn.tsx`: Renders a single column using `useDroppable` and `SortableContext`. Includes inline editing for the column title (committed on blur or Enter).
+- `src/components/KanbanCard.tsx`: Renders an individual card using `useSortable`. Supports inline editing of the card title and details, as well as card deletion.
 - `src/components/KanbanCardPreview.tsx`: Renders a dragged card during a drag operation (`DragOverlay`).
 - `src/components/NewCardForm.tsx`: Form at the bottom of a column to add a new card.
-- `src/lib/kanban.ts`: Contains the types (`Card`, `Column`, `BoardData`), mock data (`initialData`), and logic for moving a card between columns or reordering within a column (`moveCard`).
+- `src/components/AiSidebar.tsx`: Floating chat widget that sends natural language requests to `POST /api/ai/chat` and updates the board state when the AI modifies the board.
+- `src/lib/kanban.ts`: Contains the types (`Card`, `Column`, `BoardData`), seed data (`initialData`), and logic for moving a card between columns or reordering within a column (`moveCard`).
 
-## State Management
-Currently, the state is completely local to the frontend. `KanbanBoard.tsx` initializes its state from `initialData` in `src/lib/kanban.ts`. All changes (move, add, delete, rename) update the React state but are not persisted. 
+## State Management & Build
+`KanbanBoard.tsx` loads board state from the FastAPI backend (`GET /api/board`) and persists changes (`PUT /api/board`) on column rename, card creation, card edit, card deletion, and drag-and-drop. The Next.js app is configured with `output: "export"` in `next.config.ts` and is served statically by FastAPI in Docker.
 
-## Next Steps for the Frontend
-1. **Dockerization**: Adapt the Next.js app to be built and served statically by a FastAPI backend inside a Docker container.
-2. **Fake Authentication**: Implement a simple dummy login gate ("user", "password") before showing the Kanban board.
-3. **API Integration**: Swap out local state for API calls to the FastAPI backend to fetch and mutate the Kanban board state, ensuring persistence.
-4. **AI Sidebar**: Integrate a chat interface on the side of the board that communicates with the backend, with the ability to trigger a refresh of the Kanban board when the AI updates it.

@@ -15,7 +15,7 @@ import {
 import { KanbanColumn } from "@/components/KanbanColumn";
 import { KanbanCardPreview } from "@/components/KanbanCardPreview";
 import { AiSidebar } from "@/components/AiSidebar";
-import { createId, moveCard, findColumnId, type BoardData } from "@/lib/kanban";
+import { createId, moveCard, type BoardData, type Card } from "@/lib/kanban";
 
 export const KanbanBoard = () => {
   const [board, setBoard] = useState<BoardData | null>(null);
@@ -93,6 +93,18 @@ export const KanbanBoard = () => {
           ? { ...column, cardIds: [...column.cardIds, id] }
           : column
       ),
+    };
+    syncBoard(nextBoard);
+  };
+
+  const handleEditCard = (cardId: string, title: string, details: string) => {
+    if (!board || !board.cards[cardId]) return;
+    const nextBoard = {
+      ...board,
+      cards: {
+        ...board.cards,
+        [cardId]: { ...board.cards[cardId], title, details },
+      },
     };
     syncBoard(nextBoard);
   };
@@ -179,9 +191,12 @@ export const KanbanBoard = () => {
               <KanbanColumn
                 key={column.id}
                 column={column}
-                cards={column.cardIds.map((cardId) => board.cards[cardId])}
+                cards={column.cardIds
+                  .map((cardId) => board.cards[cardId])
+                  .filter((card): card is Card => Boolean(card))}
                 onRename={handleRenameColumn}
                 onAddCard={handleAddCard}
+                onEditCard={handleEditCard}
                 onDeleteCard={handleDeleteCard}
               />
             ))}

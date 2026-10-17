@@ -18,31 +18,44 @@ Stores the Kanban board data. There is a 1-to-1 relationship with the `users` ta
 *   `updated_at`: `DATETIME DEFAULT CURRENT_TIMESTAMP`
 
 ## Example JSON `data` payload
-This matches the exact structure currently used by the NextJS frontend in its initial state:
+This matches the `BoardData` structure used by the Next.js frontend and FastAPI backend:
 ```json
-[
-  {
-    "id": "todo",
-    "title": "To Do",
-    "cards": [
-      {
-        "id": "card-1",
-        "title": "Setup project repository",
-        "description": "Initialize NextJS and FastAPI"
-      }
-    ]
-  },
-  {
-    "id": "in-progress",
-    "title": "In Progress",
-    "cards": []
-  },
-  {
-    "id": "done",
-    "title": "Done",
-    "cards": []
+{
+  "columns": [
+    {
+      "id": "col-backlog",
+      "title": "Backlog",
+      "cardIds": ["card-1"]
+    },
+    {
+      "id": "col-discovery",
+      "title": "Discovery",
+      "cardIds": []
+    },
+    {
+      "id": "col-progress",
+      "title": "In Progress",
+      "cardIds": []
+    },
+    {
+      "id": "col-review",
+      "title": "Review",
+      "cardIds": []
+    },
+    {
+      "id": "col-done",
+      "title": "Done",
+      "cardIds": []
+    }
+  ],
+  "cards": {
+    "card-1": {
+      "id": "card-1",
+      "title": "Align roadmap themes",
+      "details": "Draft quarterly themes with impact statements and metrics."
+    }
   }
-]
+}
 ```
 
 ## Initial Setup

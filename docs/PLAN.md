@@ -3,7 +3,7 @@
 ## Part 1: Plan
 - [x] Enrich this document to plan out each of these parts in detail, with substeps listed out as a checklist to be checked off by the agent, and with tests and success criteria for each.
 - [x] Create an `AGENTS.md` file inside the `frontend` directory that describes the existing code there.
-- [ ] Ensure the user checks and approves the plan.
+- [x] Ensure the user checks and approves the plan.
 **Success Criteria:** `docs/PLAN.md` contains detailed checklists and testing criteria, `frontend/AGENTS.md` exists and accurately describes the frontend, and the user approves the plan.
 
 ## Part 2: Scaffolding

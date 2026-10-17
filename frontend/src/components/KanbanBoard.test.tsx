@@ -36,11 +36,11 @@ describe("KanbanBoard", () => {
     const column = await getFirstColumn();
     const input = within(column).getByLabelText("Column title");
     await userEvent.clear(input);
-    await userEvent.type(input, "New Name");
+    await userEvent.type(input, "New Name{enter}");
     expect(input).toHaveValue("New Name");
   });
 
-  it("adds and removes a card", async () => {
+  it("adds, edits, and removes a card", async () => {
     render(<KanbanBoard />);
     const column = await getFirstColumn();
     const addButton = within(column).getByRole("button", {
@@ -57,12 +57,31 @@ describe("KanbanBoard", () => {
 
     expect(within(column).getByText("New card")).toBeInTheDocument();
 
+    const editButton = within(column).getByRole("button", {
+      name: /edit new card/i,
+    });
+    await userEvent.click(editButton);
+
+    const editTitleInput = within(column).getByLabelText("Edit card title");
+    await userEvent.clear(editTitleInput);
+    await userEvent.type(editTitleInput, "Edited card");
+
+    const editDetailsInput = within(column).getByLabelText("Edit card details");
+    await userEvent.clear(editDetailsInput);
+    await userEvent.type(editDetailsInput, "Updated notes");
+
+    await userEvent.click(within(column).getByRole("button", { name: /save/i }));
+
+    expect(within(column).getByText("Edited card")).toBeInTheDocument();
+    expect(within(column).getByText("Updated notes")).toBeInTheDocument();
+
     const deleteButton = within(column).getByRole("button", {
-      name: /delete new card/i,
+      name: /delete edited card/i,
     });
     await userEvent.click(deleteButton);
 
-    expect(within(column).queryByText("New card")).not.toBeInTheDocument();
+    expect(within(column).queryByText("Edited card")).not.toBeInTheDocument();
   });
 });
+
 
